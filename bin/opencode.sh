@@ -33,7 +33,7 @@ if ! podman image exists "$IMAGE_NAME"; then
     "provider": {
       "ollama": {
         "npm": "@ai-sdk/openai-compatible",
-        "options": { "baseURL": "http://localhost:11434/v1" },
+        "options": { "baseURL": "http://host.containers.internal:11434/v1" },
         "models": ([.models[] | {key: .name, value: {name: .name, tools: true}}] | from_entries)
       }
     }
