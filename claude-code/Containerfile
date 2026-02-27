@@ -1,10 +1,13 @@
-FROM docker.io/node:slim
-
-COPY changedir.sh /usr/local/bin/changedir.sh
+FROM docker.io/debian:stable-slim
 
 # Install Software
+RUN apt-get update; apt-get install -y curl git python3 pip gcc g++ gdb valgrind cmake rust-all
 
 # Install claude-code
-RUN npm i -g @anthropic-ai/claude-code
+RUN curl -fsSL https://claude.ai/install.sh | bash
 
-CMD ["/usr/local/bin/changedir.sh", "/app", "/usr/local/bin/claude"]
+ENV ANTHROPIC_AUTH_TOKEN=ollama
+ENV ANTHROPIC_API_KEY=""
+ENV ANTHROPIC_BASE_URL=http://host.containers.internal:11434
+WORKDIR /app
+

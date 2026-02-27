@@ -1,11 +1,14 @@
-FROM docker.io/node:slim
-
-COPY changedir.sh /usr/local/bin/changedir.sh
-COPY opencode.json /root/.config/opencode/opencode.json
+FROM docker.io/debian:stable-slim
 
 # Install Software
+RUN apt-get update; apt-get install -y curl git python3 pip gcc g++ gdb valgrind cmake rust-all
+
+# Copy configs and runscript
+COPY opencode.json /root/.config/opencode/opencode.json
 
 # Install opencode
-RUN npm i -g opencode-ai
+RUN curl -fsSL https://opencode.ai/install | bash
 
-ENTRYPOINT ["/usr/local/bin/changedir.sh", "/app", "/usr/local/bin/opencode"]
+WORKDIR /app
+CMD ["/root/.opencode/bin/opencode"]
+

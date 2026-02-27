@@ -4,7 +4,6 @@
 
 IMAGE_NAME="opencode"
 
-
 # This gets the dir of the project
 PROJ_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 
@@ -12,8 +11,6 @@ PROJ_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 # Get Args
 usage() {
   echo "Usage: ${0} [-h] [-r] WORKING_DIR"
-  echo "  CODE_DIR [REQUIRED] The working dir for ${IMAGE_NAME}"
-  echo
   echo "  -r       Rebuild"
   echo "  -h       Display this message"
   exit 1
@@ -25,20 +22,24 @@ while getopts "rh" opt; do
   esac
 done
 shift $((OPTIND-1)) # Shift away the options processed by getopts
-if [[ -z "${1}" ]]; then
-  echo "Error: Missing workding dir."
-  usage
-fi
-WORKING_DIR="${1}"
 
 
 if [[ "true" == "${REBUILD}" ]]; then
   podman image rm ${IMAGE_NAME}
 fi
-
 if ! podman image exists "$IMAGE_NAME"; then
-    podman build -t ${IMAGE_NAME} "${PROJ_DIR}/${IMAGE_NAME}"
+  #curl -s http://localhost:11434/api/tags | jq '{
+  #  "$schema": "https://opencode.ai/config.json",
+  #  "provider": {
+  #    "ollama": {
+  #      "npm": "@ai-sdk/openai-compatible",
+  #      "options": { "baseURL": "http://localhost:11434/v1" },
+  #      "models": ([.models[] | {key: .name, value: {name: .name, tools: true}}] | from_entries)
+  #    }
+  #  }
+  #}' > ~/.config/opencode/opencode.json
+  podman build -t ${IMAGE_NAME} "${PROJ_DIR}/${IMAGE_NAME}"
 fi
 
-podman run -it --rm -v "$(realpath "${WORKING_DIR}"):/app" ${IMAGE_NAME}
+podman run -it --rm -v ./:/app ${IMAGE_NAME}
 
