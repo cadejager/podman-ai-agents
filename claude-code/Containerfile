@@ -1,0 +1,10 @@
+FROM docker.io/node:slim
+
+COPY changedir.sh /usr/local/bin/changedir.sh
+
+# Install Software
+
+# Install claude-code
+RUN npm i -g @anthropic-ai/claude-code
+
+CMD ["/usr/local/bin/changedir.sh", "/app", "/usr/local/bin/claude"]

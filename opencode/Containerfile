@@ -1,0 +1,11 @@
+FROM docker.io/node:slim
+
+COPY changedir.sh /usr/local/bin/changedir.sh
+COPY opencode.json /root/.config/opencode/opencode.json
+
+# Install Software
+
+# Install opencode
+RUN npm i -g opencode-ai
+
+ENTRYPOINT ["/usr/local/bin/changedir.sh", "/app", "/usr/local/bin/opencode"]

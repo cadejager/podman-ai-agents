@@ -1,0 +1,16 @@
+services:
+  ollama:
+    container_name: ollama
+    #build: .
+    image: docker.io/ollama/ollama:latest
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    volumes:
+      - ./ollama:/root/.ollama
+    network_mode: pasta
+    ports:
+      - 11434:11434
+    environment:
+      - OLLAMA_VULKAN=1
+
