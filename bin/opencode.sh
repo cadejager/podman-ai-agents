@@ -28,16 +28,16 @@ if [[ "true" == "${REBUILD}" ]]; then
   podman image rm ${IMAGE_NAME}
 fi
 if ! podman image exists "$IMAGE_NAME"; then
-  #curl -s http://localhost:11434/api/tags | jq '{
-  #  "$schema": "https://opencode.ai/config.json",
-  #  "provider": {
-  #    "ollama": {
-  #      "npm": "@ai-sdk/openai-compatible",
-  #      "options": { "baseURL": "http://localhost:11434/v1" },
-  #      "models": ([.models[] | {key: .name, value: {name: .name, tools: true}}] | from_entries)
-  #    }
-  #  }
-  #}' > ~/.config/opencode/opencode.json
+  curl -s http://localhost:11434/api/tags | jq '{
+    "$schema": "https://opencode.ai/config.json",
+    "provider": {
+      "ollama": {
+        "npm": "@ai-sdk/openai-compatible",
+        "options": { "baseURL": "http://localhost:11434/v1" },
+        "models": ([.models[] | {key: .name, value: {name: .name, tools: true}}] | from_entries)
+      }
+    }
+  }' > "${PROJ_DIR}/opencode/opencode.json"
   podman build -t ${IMAGE_NAME} "${PROJ_DIR}/${IMAGE_NAME}"
 fi
 
